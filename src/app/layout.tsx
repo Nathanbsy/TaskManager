@@ -25,6 +25,18 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <nav className="bg-gray-800 text-white p-4">
+          <div className="container mx-auto flex items-center justify-between">
+            <a href="/" className="text-lg font-bold">
+              TaskManager
+            </a>
+            <div>
+              <a href="/tasks" className="mr-4 hover:underline">
+                Tasks
+              </a>
+            </div>
+          </div>
+        </nav>
         {children}
       </body>
     </html>
