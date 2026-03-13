@@ -31,7 +31,7 @@ export default function RootLayout({
               TaskManager
             </a>
             <div>
-              <a href="/tasks" className="mr-4 hover:underline">
+              <a href="/task" className="mr-4 hover:underline">
                 Tasks
               </a>
             </div>

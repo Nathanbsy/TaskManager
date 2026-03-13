@@ -1,16 +1,17 @@
 import db from "../db/db.js";
+import app from "../index.js";
 
 //FUNCOES DAS TASKS
 
 //Criar Task
 app.post("/tasks", (req, res) => {
-    const { tituloTask, descricaoTask, dataEntrega, idStatus, idEmpresa, idResponsavel, idCriador } = req.body;
-    const q = "INSERT INTO Task (TituloTask, DescricaoTask, DataEntrega, IdStatus, IdEmpresa, IdResponsavel, IdCriador) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const { tituloTask, descricaoTask, dataEntrega, prioridade, idStatus, idEmpresa, idResponsavel, idCriador, idWorkspace } = req.body;
+    const q = "INSERT INTO Task (TituloTask, DescricaoTask, DataEntrega, Prioridade, IdStatus, IdEmpresa, IdResponsavel, IdCriador, IdWorkspace) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     db.getConnection((err, conexao) => {
         if (err) {
             return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
         }
-        conexao.query(q, [tituloTask, descricaoTask, dataEntrega, idStatus, idEmpresa, idResponsavel, idCriador], (err, resultado) => {
+        conexao.query(q, [tituloTask, descricaoTask, dataEntrega, prioridade, idStatus, idEmpresa, idResponsavel, idCriador, idWorkspace], (err, resultado) => {
             conexao.release();
             if (err) {
                 console.error("Erro ao inserir task:", err);
@@ -44,7 +45,7 @@ app.get("/tasks", (req, res) => {
 //Selecionar todas as Tasks da empresa do usuario logado
 app.get("/tasks/empresa", (req, res) => {
     //Colocar paginacao depois
-    const q = "SELECT * FROM Task WHERE IdEmpresa = ?";
+    const q = "SELECT * FROM Task WHERE IdEmpresa = ? AND IdWorkspace = ?";
     db.getConnection((err, conexao) => {
         if (err) {
             console.error("Erro ao conectar ao banco de dados:", err);
@@ -63,7 +64,7 @@ app.get("/tasks/empresa", (req, res) => {
 
 //Selecionar Task por ID
 app.get("/tasks/:id", (req, res) => {
-    const { id } = req.params;
+    const { id, idEmpresa } = req.params;
     const q = "SELECT * FROM Task WHERE IdTask = ?";
     db.getConnection((err, conexao) => {
         if (err) {
@@ -86,14 +87,14 @@ app.get("/tasks/:id", (req, res) => {
 //Atualizar Task
 app.put("/tasks/:id", (req, res) => {
     const { id } = req.params;
-    const { tituloTask, descricaoTask, dataEntrega, idStatus, idResponsavel } = req.body;
-    const q = "UPDATE Task SET TituloTask = ?, DescricaoTask = ?, DataEntrega = ?, IdStatus = ?, IdResponsavel = ? WHERE IdTask = ?";
+    const { tituloTask, descricaoTask, dataEntrega, prioridade, idStatus, idResponsavel } = req.body;
+    const q = "UPDATE Task SET TituloTask = ?, DescricaoTask = ?, DataEntrega = ?, Prioridade = ?, IdStatus = ?, IdResponsavel = ? WHERE IdTask = ?";
     db.getConnection((err, conexao) => {
         if(err){
             console.error("Erro ao conectar ao banco de dados:", err);
             return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
         }
-        conexao.query(q, [tituloTask, descricaoTask, dataEntrega, idStatus, idResponsavel, id], (err, resultado) => {
+        conexao.query(q, [tituloTask, descricaoTask, dataEntrega, prioridade, idStatus, idResponsavel, id], (err, resultado) => {
             conexao.release();
             if(err){
                 console.error("Erro ao atualizar task:", err);

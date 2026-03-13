@@ -1,4 +1,5 @@
 import db from "../db/db.js";
+import app from "../index.js";
 
 //FUNCOES DOS STATUS
 
