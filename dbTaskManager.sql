@@ -6,10 +6,8 @@ use dbTaskManager;
 create table Empresa(
   Id int primary key auto_increment,
   NomeEmpresa varchar(80) not null,
-  CNPJ varchar(20) not null,
-  IdUsuario int not null,
-  unique (CNPJ),
-  unique (IdUsuario)
+  CNPJ varchar(20) not null unique,
+  IdUsuario int not null unique,
 );
 
 create table Usuario(
