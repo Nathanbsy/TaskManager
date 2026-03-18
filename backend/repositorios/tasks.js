@@ -24,6 +24,7 @@ app.post("/tasks", (req, res) => {
 
 //Selecionar todas as Tasks do usuario logado
 app.get("/tasks", (req, res) => {
+    const { idResponsavel } = req.query;
     const q = `SELECT * FROM Task WHERE IdResponsavel = ?`;
     db.getConnection((err, conexao) => {
         if (err) {
@@ -44,7 +45,6 @@ app.get("/tasks", (req, res) => {
 
 //Selecionar todas as Tasks da empresa do usuario logado
 app.get("/tasks/empresa", (req, res) => {
-    //Colocar paginacao depois
     const q = "SELECT * FROM Task WHERE IdEmpresa = ? AND IdWorkspace = ?";
     db.getConnection((err, conexao) => {
         if (err) {
