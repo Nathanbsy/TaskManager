@@ -34,6 +34,7 @@ export default function RootLayout({
               <a href="/task" className="mr-4 hover:underline">
                 Tasks
               </a>
+              
             </div>
           </div>
         </nav>

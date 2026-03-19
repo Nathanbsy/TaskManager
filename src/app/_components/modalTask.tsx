@@ -1,9 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-//Talvez eu descontinue a criação de status
-
-export default function FormStatus() {
+export default function ModalTask() {
     return(
         <>
         

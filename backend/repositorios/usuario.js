@@ -4,9 +4,9 @@ import app from "../index.js";
 //FUNCOES DOS USUARIOS
 
 //Criar Usuario
-app.post("/usuarios", (req, res) => {
+app.post("/usuario", (req, res) => {
     const { username, email, senha } = req.body;
-    const q = "call CadastrarUsuario(?, ?, ?)";
+    const q = "INSERT INTO Usuario (Username, Email, Senha) values (?, ?, ?)";
     db.getConnection((err, conexao) => {
         if (err) {
             return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
@@ -17,13 +17,13 @@ app.post("/usuarios", (req, res) => {
                 console.error("Erro ao inserir usuário:", err);
                 return res.status(500).json({ error: "Erro ao inserir usuário" });
             }
-            res.json({ message: "Cadastro realizado com sucesso, por favor faça login" });
+            res.json({ message: "Cadastro realizado com sucesso" });
         });
     });
 });
 
 //Selecionar Usuario
-app.get("/usuarios/:id", (req, res) => {
+app.get("/usuario/:id", (req, res) => {
     const { id } = req.params;
     const q = "SELECT * FROM Usuario WHERE IdUsuario = ?";
     db.getConnection((err, conexao) => {
@@ -42,15 +42,15 @@ app.get("/usuarios/:id", (req, res) => {
 });
 
 //Alterar Usuario
-app.put("/usuarios/:id", (req, res) => {
+app.put("/usuario/:id", (req, res) => {
     const { id } = req.params;
     const { username, email, senha } = req.body;
-    const q = "call AlterarUsuario(?, ?, ?, ?)";
+    const q = "UPDATE Usuario SET Username = ?, Email = ?, Senha = ? WHERE IdUsuario = ?";
     db.getConnection((err, conexao) => {
         if (err) {
             return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
         }
-        conexao.query(q, [id, username, email, senha], (err, resultado) => {
+        conexao.query(q, [username, email, senha, id], (err, resultado) => {
             conexao.release();
             if (err) {
                 console.error("Erro ao atualizar usuário:", err);
@@ -62,7 +62,7 @@ app.put("/usuarios/:id", (req, res) => {
 });
 
 //Deletar Usuario
-app.delete("/usuarios/:id", (req, res) => {
+app.delete("/usuario/:id", (req, res) => {
     const { id } = req.params;
     const q = "call DeletarUsuario(?)";
     db.getConnection((err, conexao) => {
