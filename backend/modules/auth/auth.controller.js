@@ -1,9 +1,9 @@
-import db from "../db/db.js";
-import app from "../index.js";
+import db from "../../db/db.js";
+import app from "../../index.js";
 
 //login
 //código não finalizado, apenas para testes
-app.get("/login", (req, res => {
+app.post("/login", (req, res => {
     const { email, senha } = req.body;
     const q = "call Login(?, ?)";
 

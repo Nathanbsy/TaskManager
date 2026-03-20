@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
 
-export * from "./repositorios/usuario.js";
-export * from "./repositorios/empresas.js";
-export * from "./repositorios/comentario.js";
-export * from "./repositorios/status.js";
-export * from "./repositorios/tasks.js";
-export * from "./repositorios/workspace.js";
-export * from "./repositorios/autenticacao.js";
+export * from "./modules/usuario.js";
+export * from "./modules/empresas.js";
+export * from "./modules/comentario.js";
+export * from "./modules/status.js";
+export * from "./modules/tasks.js";
+export * from "./modules/workspace.js";
+export * from "./modules/auth/auth.controller.js";
 
 const app = express();
 
