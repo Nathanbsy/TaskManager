@@ -4,52 +4,44 @@ import app from "../index.js";
 //FUNCOES DOS COMENTARIOS
 
 //Criar Comentário
-app.post("/comentarios", (req, res) => {
-    const { textoComentario, idTarefa, idUsuario } = req.body;
-    const q = "INSERT INTO Comentario (Texto, IdTask, IdUsuario) VALUES (?, ?, ?)";
+app.post("/issues/:idIssue/comentarios", (req, res) => {
+    //Pegando o Id da Issue com os parametros da URL
+    const { idIssue } = req.params;
+    const { texto } = req.body;
+
+    if (!texto) {
+        return res.status(400).json({ error: "Texto do comentário é obrigatório" });
+    }
+
+    const q = "INSERT INTO Comentario (IdIssue, IdUsuario, Texto) VALUES (?, ?, ?)";
     db.getConnection((err, conexao) => {
         if (err) {
             return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
         }
-        conexao.query(q, [textoComentario, idTarefa, idUsuario], (err, resultado) => {
+        conexao.query(q, [idIssue, req.usuario.id, texto], (err, resultado) => {
             conexao.release();
             if (err) {
                 console.error("Erro ao inserir comentário:", err);
                 return res.status(500).json({ error: "Erro ao inserir comentário" });
             }
-            res.json({ message: "Comentário criado com sucesso" });
+            res.status(201).json({ message: "Comentário criado com sucesso", id: resultado.insertId });
         });
     });
 });
 
-//Deletar Comentário
-app.delete("/comentarios/:id", (req, res) => {
-    const { id } = req.params;
-    const q = "DELETE FROM Comentario WHERE IdComentario = ?";
+//Selecionar Comentários por Issue
+app.get("/issues/:idIssue/comentarios", (req, res) => {
+    const { idIssue } = req.params;
+    const q = `SELECT c.*, u.Username, u.Avatar 
+               FROM Comentario c 
+               JOIN Usuario u ON c.IdUsuario = u.Id 
+               WHERE c.IdIssue = ? AND c.Deletado = false 
+               ORDER BY c.DataCriacao ASC`;
     db.getConnection((err, conexao) => {
         if (err) {
             return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
         }
-        conexao.query(q, [id], (err, resultado) => {
-            conexao.release();
-            if (err) {
-                console.error("Erro ao deletar comentário:", err);
-                return res.status(500).json({ error: "Erro ao deletar comentário" });
-            }
-            res.json({ message: "Comentário deletado com sucesso" });
-        });
-    });
-});
-
-//Selecionar Comentários por Tarefa
-app.get("/comentarios/tarefa/:idTarefa", (req, res) => {
-    const { idTarefa } = req.params;
-    const q = "SELECT c.IdComentario, c.TextoComentario, c.IdTarefa, c.IdUsuario, u.Username FROM Comentario c JOIN Usuario u ON c.IdUsuario = u.IdUsuario WHERE c.IdTarefa = ?";
-    db.getConnection((err, conexao) => {
-        if (err) {
-            return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
-        }
-        conexao.query(q, [idTarefa], (err, resultado) => {
+        conexao.query(q, [idIssue], (err, resultado) => {
             conexao.release();
             if (err) {
                 console.error("Erro ao buscar comentários:", err);
@@ -63,19 +55,49 @@ app.get("/comentarios/tarefa/:idTarefa", (req, res) => {
 //Editar Comentário
 app.put("/comentarios/:id", (req, res) => {
     const { id } = req.params;
-    const { textoComentario } = req.body;
-    const q = "UPDATE Comentario SET TextoComentario = ? WHERE IdComentario = ?";
+    const { texto } = req.body;
+
+    if (!texto) {
+        return res.status(400).json({ error: "Texto do comentário é obrigatório" });
+    }
+
+    const q = "UPDATE Comentario SET Texto = ?, DataAtualizacao = NOW() WHERE Id = ? AND IdUsuario = ?";
     db.getConnection((err, conexao) => {
         if (err) {
             return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
         }
-        conexao.query(q, [textoComentario, id], (err, resultado) => {
+        conexao.query(q, [texto, id, req.usuario.id], (err, resultado) => {
             conexao.release();
             if (err) {
                 console.error("Erro ao atualizar comentário:", err);
                 return res.status(500).json({ error: "Erro ao atualizar comentário" });
             }
+            if (resultado.affectedRows === 0) {
+                return res.status(403).json({ error: "Você não tem permissão para editar este comentário" });
+            }
             res.json({ message: "Comentário atualizado com sucesso" });
+        });
+    });
+});
+
+//Deletar Comentário (soft delete)
+app.delete("/comentarios/:id", (req, res) => {
+    const { id } = req.params;
+    const q = "UPDATE Comentario SET Deletado = true WHERE Id = ? AND IdUsuario = ?";
+    db.getConnection((err, conexao) => {
+        if (err) {
+            return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
+        }
+        conexao.query(q, [id, req.usuario.id], (err, resultado) => {
+            conexao.release();
+            if (err) {
+                console.error("Erro ao deletar comentário:", err);
+                return res.status(500).json({ error: "Erro ao deletar comentário" });
+            }
+            if (resultado.affectedRows === 0) {
+                return res.status(403).json({ error: "Você não tem permissão para deletar este comentário" });
+            }
+            res.json({ message: "Comentário deletado com sucesso" });
         });
     });
 });

@@ -1,22 +1,17 @@
-import db from "../../db/db.js";
-import app from "../../index.js";
+import { registerUser, loginUser, refreshTokenUser, getCurrentUser } from "./auth.service.js";
 
-//login
-//código não finalizado, apenas para testes
-app.post("/login", (req, res => {
-    const { email, senha } = req.body;
-    const q = "call Login(?, ?)";
+export const register = (req, res) => {
+  registerUser(req, res);
+};
 
-    db.getConnection((err, conexao) => {
-        if(err) return res.status(500).json({ error: "Erro ao conectar ao banco de dados" });
+export const login = (req, res) => {
+  loginUser(req, res);
+};
 
-        conexao.query(q, [email, senha], (err, resultado) => {
-            conexao.release();
-            if(err) {
-                console.error("Ocorreu um erro ao realizar o login:", err)
-                return res.status(500).json({ error: "Erro ao realizar o login" });
-            }
-            res.json({ message: "Login realizado com sucesso" });
-        });
-    });
-}));
+export const refreshToken = (req, res) => {
+  refreshTokenUser(req, res);
+};
+
+export const getCurrentUserData = (req, res) => {
+  getCurrentUser(req, res);
+};
