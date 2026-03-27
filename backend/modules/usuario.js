@@ -1,10 +1,12 @@
+import { Router } from "express";
 import db from "../db/db.js";
-import app from "../index.js";
+
+const router = Router();
 
 //FUNCOES DOS USUARIOS
 
 //Selecionar Usuario por ID
-app.get("/usuario/:id", (req, res) => {
+router.get("/usuario/:id", (req, res) => {
     const { id } = req.params;
     const q = "SELECT Id, Username, Email, NomeCompleto, Avatar, Tipo, Ativo, DataCriacao FROM Usuario WHERE Id = ?";
     db.getConnection((err, conexao) => {
@@ -23,7 +25,7 @@ app.get("/usuario/:id", (req, res) => {
 });
 
 //Buscar todos os usuários
-app.get("/usuarios", (req, res) => {
+router.get("/usuarios", (req, res) => {
     const q = "SELECT Id, Username, Email, NomeCompleto, Avatar, Tipo, Ativo, DataCriacao FROM Usuario WHERE Ativo = true";
     db.getConnection((err, conexao) => {
         if (err) {
@@ -41,7 +43,7 @@ app.get("/usuarios", (req, res) => {
 });
 
 //Atualizar perfil do Usuario
-app.put("/usuario/:id", (req, res) => {
+router.put("/usuario/:id", (req, res) => {
     const { id } = req.params;
     const { nomeCompleto, avatar } = req.body;
     const q = "UPDATE Usuario SET NomeCompleto = ?, Avatar = ? WHERE Id = ?";
@@ -61,7 +63,7 @@ app.put("/usuario/:id", (req, res) => {
 });
 
 //Atualizar email do Usuario
-app.put("/usuario/:id/email", (req, res) => {
+router.put("/usuario/:id/email", (req, res) => {
     const { id } = req.params;
     const { email } = req.body;
     
@@ -89,7 +91,7 @@ app.put("/usuario/:id/email", (req, res) => {
 });
 
 //Desativar Usuario
-app.delete("/usuario/:id", (req, res) => {
+router.delete("/usuario/:id", (req, res) => {
     const { id } = req.params;
     const q = "UPDATE Usuario SET Ativo = false WHERE Id = ?";
     db.getConnection((err, conexao) => {
@@ -106,3 +108,5 @@ app.delete("/usuario/:id", (req, res) => {
         });
     });
 });
+
+export default router;

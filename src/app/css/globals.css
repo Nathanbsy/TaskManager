@@ -14,18 +14,6 @@
   --font-family: 'Nunito', sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0A0A0A;
-    --foreground: #F8F8F8;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);

@@ -1,10 +1,12 @@
+import { Router } from "express";
 import db from "../db/db.js";
-import app from "../index.js";
+
+const router = Router();
 
 //FUNCOES DOS STATUS
 
 //Criar Status
-app.post("/projetos/:idProjeto/status", (req, res) => {
+router.post("/projetos/:idProjeto/status", (req, res) => {
     const { idProjeto } = req.params;
     const { nome, categoria, ordem, cor } = req.body;
 
@@ -32,7 +34,7 @@ app.post("/projetos/:idProjeto/status", (req, res) => {
 });
 
 //Obter Status do Projeto
-app.get("/projetos/:idProjeto/status", (req, res) => {
+router.get("/projetos/:idProjeto/status", (req, res) => {
     const { idProjeto } = req.params;
     const q = "SELECT * FROM Status WHERE IdProjeto = ? OR IdProjeto IS NULL ORDER BY Ordem";
     db.getConnection((err, conexao) => {
@@ -51,7 +53,7 @@ app.get("/projetos/:idProjeto/status", (req, res) => {
 });
 
 //Atualizar Status
-app.put("/status/:id", (req, res) => {
+router.put("/status/:id", (req, res) => {
     const { id } = req.params;
     const { nome, categoria, ordem, cor } = req.body;
     const q = "UPDATE Status SET Nome = ?, Categoria = ?, Ordem = ?, Cor = ? WHERE Id = ?";
@@ -72,7 +74,7 @@ app.put("/status/:id", (req, res) => {
 });
 
 //Deletar Status
-app.delete("/status/:id", (req, res) => {
+router.delete("/status/:id", (req, res) => {
     const { id } = req.params;
     const q = "DELETE FROM Status WHERE Id = ?";
     db.getConnection((err, conexao) => {
@@ -90,3 +92,5 @@ app.delete("/status/:id", (req, res) => {
         });
     });
 });
+
+export default router;

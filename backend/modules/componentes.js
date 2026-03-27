@@ -1,12 +1,14 @@
+import { Router } from "express";
 import db from "../db/db.js";
-import app from "../index.js";
+
+const router = Router();
 
 // ============================================
 // COMPONENTES
 // ============================================
 
 // Criar Componente
-app.post("/projetos/:idProjeto/componentes", (req, res) => {
+router.post("/projetos/:idProjeto/componentes", (req, res) => {
     const { idProjeto } = req.params;
     const { nome, descricao, idLider } = req.body;
 
@@ -34,7 +36,7 @@ app.post("/projetos/:idProjeto/componentes", (req, res) => {
 });
 
 // Obter componentes do projeto
-app.get("/projetos/:idProjeto/componentes", (req, res) => {
+router.get("/projetos/:idProjeto/componentes", (req, res) => {
     const { idProjeto } = req.params;
     const q = `SELECT c.*, u.Username as LiderName, COUNT(ic.IdIssue) as TotalIssues 
                FROM Componente c 
@@ -59,7 +61,7 @@ app.get("/projetos/:idProjeto/componentes", (req, res) => {
 });
 
 // Atualizar Componente
-app.put("/componentes/:id", (req, res) => {
+router.put("/componentes/:id", (req, res) => {
     const { id } = req.params;
     const { nome, descricao, idLider } = req.body;
 
@@ -80,7 +82,7 @@ app.put("/componentes/:id", (req, res) => {
 });
 
 // Deletar Componente
-app.delete("/componentes/:id", (req, res) => {
+router.delete("/componentes/:id", (req, res) => {
     const { id } = req.params;
     const q = "DELETE FROM Componente WHERE Id = ?";
     db.getConnection((err, conexao) => {
@@ -103,7 +105,7 @@ app.delete("/componentes/:id", (req, res) => {
 // ============================================
 
 // Adicionar componente à issue
-app.post("/issues/:idIssue/componentes/:idComponente", (req, res) => {
+router.post("/issues/:idIssue/componentes/:idComponente", (req, res) => {
     const { idIssue, idComponente } = req.params;
 
     const q = "INSERT INTO IssueComponente (IdIssue, IdComponente) VALUES (?, ?)";
@@ -126,7 +128,7 @@ app.post("/issues/:idIssue/componentes/:idComponente", (req, res) => {
 });
 
 // Obter componentes da issue
-app.get("/issues/:idIssue/componentes", (req, res) => {
+router.get("/issues/:idIssue/componentes", (req, res) => {
     const { idIssue } = req.params;
     const q = `SELECT c.* FROM Componente c 
                JOIN IssueComponente ic ON c.Id = ic.IdComponente 
@@ -148,7 +150,7 @@ app.get("/issues/:idIssue/componentes", (req, res) => {
 });
 
 // Remover componente da issue
-app.delete("/issues/:idIssue/componentes/:idComponente", (req, res) => {
+router.delete("/issues/:idIssue/componentes/:idComponente", (req, res) => {
     const { idIssue, idComponente } = req.params;
 
     const q = "DELETE FROM IssueComponente WHERE IdIssue = ? AND IdComponente = ?";
@@ -166,3 +168,5 @@ app.delete("/issues/:idIssue/componentes/:idComponente", (req, res) => {
         });
     });
 });
+
+export default router;

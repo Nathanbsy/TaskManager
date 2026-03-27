@@ -1,10 +1,12 @@
+import { Router } from "express";
 import db from "../db/db.js";
-import app from "../index.js";
+
+const router = Router();
 
 //FUNCOES DOS COMENTARIOS
 
 //Criar Comentário
-app.post("/issues/:idIssue/comentarios", (req, res) => {
+router.post("/issues/:idIssue/comentarios", (req, res) => {
     //Pegando o Id da Issue com os parametros da URL
     const { idIssue } = req.params;
     const { texto } = req.body;
@@ -30,7 +32,7 @@ app.post("/issues/:idIssue/comentarios", (req, res) => {
 });
 
 //Selecionar Comentários por Issue
-app.get("/issues/:idIssue/comentarios", (req, res) => {
+router.get("/issues/:idIssue/comentarios", (req, res) => {
     const { idIssue } = req.params;
     const q = `SELECT c.*, u.Username, u.Avatar 
                FROM Comentario c 
@@ -53,7 +55,7 @@ app.get("/issues/:idIssue/comentarios", (req, res) => {
 });
 
 //Editar Comentário
-app.put("/comentarios/:id", (req, res) => {
+router.put("/comentarios/:id", (req, res) => {
     const { id } = req.params;
     const { texto } = req.body;
 
@@ -81,7 +83,7 @@ app.put("/comentarios/:id", (req, res) => {
 });
 
 //Deletar Comentário (soft delete)
-app.delete("/comentarios/:id", (req, res) => {
+router.delete("/comentarios/:id", (req, res) => {
     const { id } = req.params;
     const q = "UPDATE Comentario SET Deletado = true WHERE Id = ? AND IdUsuario = ?";
     db.getConnection((err, conexao) => {
@@ -102,3 +104,4 @@ app.delete("/comentarios/:id", (req, res) => {
     });
 });
 
+export default router;

@@ -455,3 +455,9 @@ insert into Status (Nome, Categoria, Ordem, Cor) values
 ('Em Teste', 'IN_PROGRESS', 4, '#7ED321'),
 ('Concluído', 'DONE', 5, '#50E3C2'),
 ('Cancelado', 'DONE', 6, '#B8E986');
+
+SELECT * FROM Usuario;
+SELECT * FROM Membro;
+SELECT * FROM Empresa;
+SELECT * FROM Atividade;
+SELECT * FROM Anexo;

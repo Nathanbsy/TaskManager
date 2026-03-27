@@ -5,7 +5,7 @@ import {
   refreshToken,
   getCurrentUserData,
 } from "./auth.controller.js";
-import { verifyAuth } from "../middlewares/auth.middleware.js";
+import { verifyAuth } from "../../middlewares/auth.middleware.js";
 
 const router = express.Router();
 

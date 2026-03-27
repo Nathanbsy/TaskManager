@@ -1,10 +1,12 @@
+import { Router } from "express";
 import db from "../db/db.js";
-import app from "../index.js";
+
+const router = Router();
 
 //FUNCOES DAS EMPRESAS
 
 //Selecionar Empresa
-app.get("/empresas/:id", (req, res) => {
+router.get("/empresas/:id", (req, res) => {
     const { id } = req.params;
     const q = "SELECT e.*, u.Username as AdministradorName, u.Email as AdministradorEmail FROM Empresa e LEFT JOIN Usuario u ON e.IdAdministrador = u.Id WHERE e.Id = ?";
     db.getConnection((err, conexao) => {
@@ -26,7 +28,7 @@ app.get("/empresas/:id", (req, res) => {
 });
 
 //Buscar todas as empresas
-app.get("/empresas", (req, res) => {
+router.get("/empresas", (req, res) => {
     const q = "SELECT e.*, u.Username as AdministradorName FROM Empresa e LEFT JOIN Usuario u ON e.IdAdministrador = u.Id WHERE e.Ativo = true";
     db.getConnection((err, conexao) => {
         if (err) {
@@ -44,7 +46,7 @@ app.get("/empresas", (req, res) => {
 });
 
 //Alterar Empresa
-app.put("/empresas/:id", (req, res) => {
+router.put("/empresas/:id", (req, res) => {
     const { id } = req.params;
     const { nomeEmpresa, idAdministrador } = req.body;
     const q = "UPDATE Empresa SET NomeEmpresa = ?, IdAdministrador = ? WHERE Id = ?";
@@ -64,7 +66,7 @@ app.put("/empresas/:id", (req, res) => {
 });
 
 //Desativar Empresa
-app.delete("/empresas/:id", (req, res) => {
+router.delete("/empresas/:id", (req, res) => {
     const { id } = req.params;
     const q = "UPDATE Empresa SET Ativo = false WHERE Id = ?";
     db.getConnection((err, conexao) => {
@@ -81,3 +83,5 @@ app.delete("/empresas/:id", (req, res) => {
         });
     });
 });
+
+export default router;

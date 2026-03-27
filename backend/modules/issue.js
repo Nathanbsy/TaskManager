@@ -1,12 +1,14 @@
+import { Router } from "express";
 import db from "../db/db.js";
-import app from "../index.js";
+
+const router = Router();
 
 // ============================================
 // ISSUES (substitui Tasks)
 // ============================================
 
 // Criar Issue
-app.post("/projetos/:idProjeto/issues", (req, res) => {
+router.post("/projetos/:idProjeto/issues", (req, res) => {
     const { idProjeto } = req.params;
     const { titulo, descricao, idTipoIssue, idPrioridade, idStatus, idResponsavel, idEpic, idSprint, estimativaHoras, dataVencimento } = req.body;
 
@@ -57,7 +59,7 @@ app.post("/projetos/:idProjeto/issues", (req, res) => {
 });
 
 // Obter todas as issues do projeto
-app.get("/projetos/:idProjeto/issues", (req, res) => {
+router.get("/projetos/:idProjeto/issues", (req, res) => {
     const { idProjeto } = req.params;
     const { idStatus, idResponsavel, idSprint, idEpic } = req.query;
 
@@ -108,7 +110,7 @@ app.get("/projetos/:idProjeto/issues", (req, res) => {
 });
 
 // Obter issue por ID
-app.get("/issues/:id", (req, res) => {
+router.get("/issues/:id", (req, res) => {
     const { id } = req.params;
     const q = `SELECT i.*, t.Nome as TipoName, p.Nome as PrioridadeName, s.Nome as StatusName,
                u1.Username as CriadorName, u1.Email as CriadorEmail,
@@ -149,7 +151,7 @@ app.get("/issues/:id", (req, res) => {
 });
 
 // Atualizar Issue
-app.put("/issues/:id", (req, res) => {
+router.put("/issues/:id", (req, res) => {
     const { id } = req.params;
     const { titulo, descricao, idTipoIssue, idPrioridade, idStatus, idResponsavel, idEpic, idSprint, estimativaHoras, tempoGastoHoras, dataVencimento } = req.body;
 
@@ -175,7 +177,7 @@ app.put("/issues/:id", (req, res) => {
 });
 
 // Deletar Issue
-app.delete("/issues/:id", (req, res) => {
+router.delete("/issues/:id", (req, res) => {
     const { id } = req.params;
     const q = "DELETE FROM Issue WHERE Id = ?";
 
@@ -199,7 +201,7 @@ app.delete("/issues/:id", (req, res) => {
 // ============================================
 
 // Criar Epic
-app.post("/projetos/:idProjeto/epics", (req, res) => {
+router.post("/projetos/:idProjeto/epics", (req, res) => {
     const { idProjeto } = req.params;
     const { nome, descricao, idResponsavel, dataInicio, dataFim } = req.body;
 
@@ -225,7 +227,7 @@ app.post("/projetos/:idProjeto/epics", (req, res) => {
 });
 
 // Obter epics do projeto
-app.get("/projetos/:idProjeto/epics", (req, res) => {
+router.get("/projetos/:idProjeto/epics", (req, res) => {
     const { idProjeto } = req.params;
     const q = `SELECT e.*, u.Username as ResponsavelName, COUNT(i.Id) as TotalIssues 
                FROM Epic e 
@@ -255,7 +257,7 @@ app.get("/projetos/:idProjeto/epics", (req, res) => {
 // ============================================
 
 // Criar Sprint
-app.post("/projetos/:idProjeto/sprints", (req, res) => {
+router.post("/projetos/:idProjeto/sprints", (req, res) => {
     const { idProjeto } = req.params;
     const { nome, descricao, dataInicio, dataFim, objetivo } = req.body;
 
@@ -281,7 +283,7 @@ app.post("/projetos/:idProjeto/sprints", (req, res) => {
 });
 
 // Obter sprints do projeto
-app.get("/projetos/:idProjeto/sprints", (req, res) => {
+router.get("/projetos/:idProjeto/sprints", (req, res) => {
     const { idProjeto } = req.params;
     const q = `SELECT s.*, COUNT(i.Id) as TotalIssues, SUM(i.EstimativaHoras) as TotalHoras 
                FROM Sprint s 
@@ -304,3 +306,5 @@ app.get("/projetos/:idProjeto/sprints", (req, res) => {
         });
     });
 });
+
+export default router;

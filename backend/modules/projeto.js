@@ -1,12 +1,14 @@
+import { Router } from "express";
 import db from "../db/db.js";
-import app from "../index.js";
+
+const router = Router();
 
 // ============================================
 // PROJETOS
 // ============================================
 
 // Criar Projeto
-app.post("/projetos", (req, res) => {
+router.post("/projetos", (req, res) => {
     const { nome, chave, descricao, idEmpresa, idLider } = req.body;
 
     if (!nome || !chave || !idEmpresa) {
@@ -34,7 +36,7 @@ app.post("/projetos", (req, res) => {
 });
 
 // Obter todos os projetos de uma empresa
-app.get("/empresas/:idEmpresa/projetos", (req, res) => {
+router.get("/empresas/:idEmpresa/projetos", (req, res) => {
     const { idEmpresa } = req.params;
     const q = "SELECT p.*, u.Username as LiderNome FROM Projeto p LEFT JOIN Usuario u ON p.IdLider = u.Id WHERE p.IdEmpresa = ? AND p.Ativo = true";
     
@@ -54,7 +56,7 @@ app.get("/empresas/:idEmpresa/projetos", (req, res) => {
 });
 
 // Obter projeto por ID
-app.get("/projetos/:id", (req, res) => {
+router.get("/projetos/:id", (req, res) => {
     const { id } = req.params;
     const q = "SELECT p.*, u.Username as LiderNome, e.NomeEmpresa FROM Projeto p LEFT JOIN Usuario u ON p.IdLider = u.Id LEFT JOIN Empresa e ON p.IdEmpresa = e.Id WHERE p.Id = ?";
     
@@ -77,7 +79,7 @@ app.get("/projetos/:id", (req, res) => {
 });
 
 // Atualizar Projeto
-app.put("/projetos/:id", (req, res) => {
+router.put("/projetos/:id", (req, res) => {
     const { id } = req.params;
     const { nome, descricao, idLider } = req.body;
 
@@ -99,7 +101,7 @@ app.put("/projetos/:id", (req, res) => {
 });
 
 // Desativar Projeto
-app.delete("/projetos/:id", (req, res) => {
+router.delete("/projetos/:id", (req, res) => {
     const { id } = req.params;
     const q = "UPDATE Projeto SET Ativo = false WHERE Id = ?";
     
@@ -123,7 +125,7 @@ app.delete("/projetos/:id", (req, res) => {
 // ============================================
 
 // Adicionar membro ao projeto
-app.post("/projetos/:idProjeto/membros", (req, res) => {
+router.post("/projetos/:idProjeto/membros", (req, res) => {
     const { idProjeto } = req.params;
     const { idUsuario, papel } = req.body;
 
@@ -152,7 +154,7 @@ app.post("/projetos/:idProjeto/membros", (req, res) => {
 });
 
 // Obter membros do projeto
-app.get("/projetos/:idProjeto/membros", (req, res) => {
+router.get("/projetos/:idProjeto/membros", (req, res) => {
     const { idProjeto } = req.params;
     const q = "SELECT m.*, u.Username, u.Email FROM Membro m JOIN Usuario u ON m.IdUsuario = u.Id WHERE m.IdProjeto = ? ORDER BY m.Papel";
     
@@ -172,7 +174,7 @@ app.get("/projetos/:idProjeto/membros", (req, res) => {
 });
 
 // Atualizar papel do membro
-app.put("/membros/:id", (req, res) => {
+router.put("/membros/:id", (req, res) => {
     const { id } = req.params;
     const { papel } = req.body;
 
@@ -198,7 +200,7 @@ app.put("/membros/:id", (req, res) => {
 });
 
 // Remover membro do projeto
-app.delete("/membros/:id", (req, res) => {
+router.delete("/membros/:id", (req, res) => {
     const { id } = req.params;
     const q = "DELETE FROM Membro WHERE Id = ?";
     
@@ -216,3 +218,5 @@ app.delete("/membros/:id", (req, res) => {
         });
     });
 });
+
+export default router;
