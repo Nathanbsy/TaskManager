@@ -3,10 +3,6 @@ import db from "../db/db.js";
 
 const router = Router();
 
-// ============================================
-// ISSUES (substitui Tasks)
-// ============================================
-
 // Criar Issue
 router.post("/projetos/:idProjeto/issues", (req, res) => {
     const { idProjeto } = req.params;

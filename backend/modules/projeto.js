@@ -3,10 +3,6 @@ import db from "../db/db.js";
 
 const router = Router();
 
-// ============================================
-// PROJETOS
-// ============================================
-
 // Criar Projeto
 router.post("/projetos", (req, res) => {
     const { nome, chave, descricao, idEmpresa, idLider } = req.body;

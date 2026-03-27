@@ -12,18 +12,27 @@ import Link from 'next/link';
 export default function RegistroPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [ user, setUser ] = useState({
+    username: "",
+    email: "",
+    senha: "",
+    confirmarSenha: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  function escrever(evento: any) {
+    setUser((prev) => ({
+      ...prev,
+      [evento.target.name]: evento.target.value,
+    }));
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (senha !== confirmarSenha) {
+    if (user.senha !== user.confirmarSenha) {
       setError('As senhas não coincidem');
       return;
     }
@@ -31,7 +40,7 @@ export default function RegistroPage() {
     setLoading(true);
 
     try {
-      const response = await authService.register(username, email, senha);
+      const response = await authService.register(user.username, user.email, user.senha);
       const { usuario, token, refreshToken } = response.data;
       
       login(usuario, token, refreshToken);
@@ -59,8 +68,8 @@ export default function RegistroPage() {
               label="Nome de usuário"
               type="text"
               placeholder="seu_usuario"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              name="username"
+              onChange={escrever}
               required
             />
 
@@ -68,8 +77,8 @@ export default function RegistroPage() {
               label="Email"
               type="email"
               placeholder="seu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              onChange={escrever}
               required
             />
 
@@ -77,8 +86,8 @@ export default function RegistroPage() {
               label="Senha"
               type="password"
               placeholder="Mínimo 6 caracteres"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
+              name="senha"
+              onChange={escrever}
               required
             />
 
@@ -86,8 +95,8 @@ export default function RegistroPage() {
               label="Confirmar Senha"
               type="password"
               placeholder="Confirme sua senha"
-              value={confirmarSenha}
-              onChange={(e) => setConfirmarSenha(e.target.value)}
+              name="confirmarSenha"
+              onChange={escrever}
               required
             />
 

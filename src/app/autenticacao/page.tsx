@@ -12,10 +12,19 @@ import Link from 'next/link';
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [ user, setUser ] = useState({
+    email: "",
+    senha: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  function escrever(evento: any) {
+    setUser((prev) => ({
+      ...prev,
+      [evento.target.name]: evento.target.value,
+    }));
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +32,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await authService.login(email, senha);
+      const response = await authService.login(user.email, user.senha);
       const { usuario, token, refreshToken } = response.data;
       
       login(usuario, token, refreshToken);
@@ -51,8 +60,9 @@ export default function LoginPage() {
               label="Email"
               type="email"
               placeholder="seu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              id="email"
+              onChange={escrever}
               required
             />
 
@@ -60,8 +70,9 @@ export default function LoginPage() {
               label="Senha"
               type="password"
               placeholder="Sua senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
+              name="senha"
+              id="senha"
+              onChange={escrever}
               required
             />
 

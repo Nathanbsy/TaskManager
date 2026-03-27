@@ -3,10 +3,6 @@ import db from "../db/db.js";
 
 const router = Router();
 
-// ============================================
-// LABELS (ETIQUETAS)
-// ============================================
-
 // Criar Label
 router.post("/projetos/:idProjeto/labels", (req, res) => {
     const { idProjeto } = req.params;

@@ -3,10 +3,6 @@ import db from "../db/db.js";
 
 const router = Router();
 
-// ============================================
-// COMPONENTES
-// ============================================
-
 // Criar Componente
 router.post("/projetos/:idProjeto/componentes", (req, res) => {
     const { idProjeto } = req.params;
