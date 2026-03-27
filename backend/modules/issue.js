@@ -106,6 +106,7 @@ router.get("/projetos/:idProjeto/issues", (req, res) => {
 });
 
 // Obter issue por ID
+
 router.get("/issues/:id", (req, res) => {
     const { id } = req.params;
     const q = `SELECT i.*, t.Nome as TipoName, p.Nome as PrioridadeName, s.Nome as StatusName,
