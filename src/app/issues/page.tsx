@@ -6,6 +6,7 @@ import { Card, CardHeader, CardBody } from '@/_components/Card';
 import { Button } from '@/_components/Button';
 import { Select } from '@/_components/Form';
 import { Badge } from '@/_components/Badge';
+import { ModalIssue } from './_components/ModalIssue';
 import Link from 'next/link';
 import { FiPlus, FiFilter } from 'react-icons/fi';
 
@@ -36,6 +37,19 @@ export default function IssuesPage() {
       responsavel: 'Carlos Santos',
     },
   ]);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedIssueId, setSelectedIssueId] = useState<number | undefined>();
+
+  const handleOpenModal = (issueId: number) => {
+    setSelectedIssueId(issueId);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedIssueId(undefined);
+  };
 
   return (
     <DashboardLayout>
@@ -82,8 +96,8 @@ export default function IssuesPage() {
 
         <div className="space-y-2">
           {issues.map((issue) => (
-            <Link key={issue.id} href={`/issues/${issue.id}`}>
-              <Card hoverable>
+            <div key={issue.id} onClick={() => handleOpenModal(issue.id)}>
+              <Card hoverable className="cursor-pointer">
                 <CardBody>
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
@@ -98,10 +112,12 @@ export default function IssuesPage() {
                   </div>
                 </CardBody>
               </Card>
-            </Link>
+            </div>
           ))}
         </div>
       </div>
+
+      <ModalIssue isOpen={modalOpen} issueId={selectedIssueId} onClose={handleCloseModal} />
     </DashboardLayout>
   );
 }

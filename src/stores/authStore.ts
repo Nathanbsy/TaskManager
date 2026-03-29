@@ -42,6 +42,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
   login: (usuario, token, refreshToken) => {
     Cookie.set('token', token, { expires: 1 });
     Cookie.set('refreshToken', refreshToken, { expires: 7 });
+    // Também salva o usuário em localStorage para persistência
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+    }
     set({
       usuario,
       token,
@@ -53,6 +57,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
   logout: () => {
     Cookie.remove('token');
     Cookie.remove('refreshToken');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('usuario');
+    }
     set({
       usuario: null,
       token: null,
@@ -62,13 +69,21 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
   
   hydrate: () => {
+    // Verifica se está no cliente (não no servidor)
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     const token = Cookie.get('token');
     const refreshToken = Cookie.get('refreshToken');
+    const usuarioStored = localStorage.getItem('usuario');
     
     if (token && refreshToken) {
+      const usuario = usuarioStored ? JSON.parse(usuarioStored) : null;
       set({
         token,
         refreshToken,
+        usuario,
         isAuthenticated: true,
       });
     }

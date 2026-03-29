@@ -12,34 +12,27 @@ import Link from 'next/link';
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [ user, setUser ] = useState({
-    email: "",
-    senha: "",
-  });
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  function escrever(evento: any) {
-    setUser((prev) => ({
-      ...prev,
-      [evento.target.name]: evento.target.value,
-    }));
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     setError('');
     setLoading(true);
 
     try {
-      const response = await authService.login(user.email, user.senha);
+      const response = await authService.login(email, senha);
       const { usuario, token, refreshToken } = response.data;
       
       login(usuario, token, refreshToken);
       router.push('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Erro ao fazer login');
-    } finally {
+      console.error('Erro de login:', err);
+      setError(err.response?.data?.error || 'Erro ao fazer login. Verifique suas credenciais.');
       setLoading(false);
     }
   };
@@ -49,10 +42,10 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader title="Bem-vindo" subtitle="Faça login na sua conta" />
         <CardBody>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-                {error}
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm font-medium">
+                ⚠️ {error}
               </div>
             )}
 
@@ -61,8 +54,10 @@ export default function LoginPage() {
               type="email"
               placeholder="seu@email.com"
               name="email"
-              id="email"
-              onChange={escrever}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+              autoComplete="email"
               required
             />
 
@@ -71,13 +66,20 @@ export default function LoginPage() {
               type="password"
               placeholder="Sua senha"
               name="senha"
-              id="senha"
-              onChange={escrever}
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              disabled={loading}
+              autoComplete="current-password"
               required
             />
 
-            <Button type="submit" loading={loading} className="w-full">
-              Entrar
+            <Button 
+              type="submit" 
+              loading={loading} 
+              className="w-full"
+              disabled={loading}
+            >
+              {loading ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>
 

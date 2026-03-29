@@ -14,7 +14,7 @@ interface ModalIssueProps {
   onClose: () => void;
 }
 
-export default function ModalIssue({ isOpen, issueId, onClose }: ModalIssueProps) {
+export function ModalIssue({ isOpen, issueId, onClose }: ModalIssueProps) {
   const [issue, setIssue] = useState<any>(null);
   const [comentarios, setComentarios] = useState<any[]>([
     {
@@ -61,7 +61,7 @@ export default function ModalIssue({ isOpen, issueId, onClose }: ModalIssueProps
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
               <h2 className="text-2xl font-bold text-gray-900">{issue.chave}</h2>
-              <Badge variant="info">{issue.tipoName}</Badge>
+              <Badge variant="default">{issue.tipoName}</Badge>
             </div>
             <p className="text-gray-600">{issue.titulo}</p>
           </div>
@@ -127,12 +127,12 @@ export default function ModalIssue({ isOpen, issueId, onClose }: ModalIssueProps
 
         {/* Footer */}
         <div className="flex gap-3 p-6 border-t border-gray-200">
-          <Link href={`/issues/detalhes/${issue.id}`} className="flex-1">
+          <Link href={`/issues/detalhes?id=${issue.id}`} className="flex-1">
             <Button variant="primary" className="w-full">
               <FiExternalLink /> Ver Detalhes Completos
             </Button>
           </Link>
-          <Button onClick={onClose}>
+          <Button variant="secondary" onClick={onClose}>
             Fechar
           </Button>
         </div>

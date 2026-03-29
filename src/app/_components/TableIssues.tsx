@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import axios from "axios";
+import { useParams } from "next/navigation";
+import { Issue } from "@/types";
 
 export default function TableIssue() {
-    
-    const [ issues, setIssues ] = useState([]);  
-    const idProjeto = 1;  
+
+    const [issues, setIssues] = useState<Issue[]>([]);
+    const idProjeto = useParams();
 
     useEffect(() => {
-        //pegar o id pela url
         const fetchIssues = async () => {
             try {
                 const res = await axios.get(`http://localhost:8080/projetos/${idProjeto}/issues`);
@@ -20,9 +21,9 @@ export default function TableIssue() {
         fetchIssues();
     }, [idProjeto]);
 
-    
 
-    return(
+
+    return (
         <>
             <div className="container-table">
                 <table className="table-issues">
@@ -43,9 +44,19 @@ export default function TableIssue() {
                     </thead>
                     <tbody>
                         {issues.map((issue) => {
-                            return(
+                            return (
                                 <tr>
-                                    <td></td>
+                                    <td>{issue.TipoName}</td>
+                                    <td>{issue.Chave}</td>
+                                    <td>{issue.Titulo}</td>
+                                    <td>{issue.StatusName}</td>
+                                    <td>{issue.CriadorName}</td>
+                                    <td>{issue.ResponsavelName}</td>
+                                    <td>{issue.EstimativaHoras}</td>
+                                    <td>{issue.TempoGastoHoras}</td>
+                                    <td>{issue.DataCriacao}</td>
+                                    <td>{issue.DataAtualizacao}</td>
+                                    <td>{issue.DataVencimento}</td>
                                 </tr>
                             );
                         })}
