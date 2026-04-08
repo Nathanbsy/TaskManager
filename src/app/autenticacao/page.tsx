@@ -12,10 +12,10 @@ import Link from 'next/link';
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [ email, setEmail ] = useState('');
+  const [ senha, setSenha ] = useState('');
+  const [ loading, setLoading ] = useState(false);
+  const [ error, setError ] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +38,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader title="Bem-vindo" subtitle="Faça login na sua conta" />
         <CardBody>

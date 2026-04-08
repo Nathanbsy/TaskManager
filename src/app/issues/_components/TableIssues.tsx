@@ -5,7 +5,7 @@ import { Issue } from "@/types";
 
 export default function TableIssue() {
 
-    const [issues, setIssues] = useState<Issue[]>([]);
+    const [ issues, setIssues ] = useState<Issue[]>([]);
     const idProjeto = useParams();
 
     useEffect(() => {

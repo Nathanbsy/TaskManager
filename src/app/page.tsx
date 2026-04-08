@@ -6,12 +6,12 @@ import { Button } from '@/_components/Button';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-blue-50">
       {/* Header */}
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">TM</span>
             </div>
             <span className="text-xl font-bold text-gray-900">TaskManager</span>
@@ -42,7 +42,7 @@ export default function Home() {
           </div>
           
           <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-            Gerencie seus projetos <span className="bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">com elegância</span>
+            Gerencie seus projetos <span className="bg-linear-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">com elegância</span>
           </h1>
           
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -164,7 +164,7 @@ export default function Home() {
             </div>
 
             {/* Pro Plan - Destacado */}
-            <div className="p-8 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 text-white relative ring-2 ring-blue-400">
+            <div className="p-8 rounded-xl bg-linear-to-br from-blue-600 to-blue-700 text-white relative ring-2 ring-blue-400">
               <div className="absolute top-4 right-4 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-bold">
                 Populares
               </div>
@@ -214,7 +214,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-blue-700">
+      <section className="py-20 px-4 bg-linear-to-r from-blue-600 to-blue-700">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-4xl font-bold mb-6">Pronto para transformar seu workflow?</h2>
           <p className="text-xl mb-8 opacity-90">Junte-se a milhares de equipes que já usam TaskManager.</p>
